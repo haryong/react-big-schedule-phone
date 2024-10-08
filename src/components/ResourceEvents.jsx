@@ -130,18 +130,25 @@ class ResourceEvents extends Component {
 
   dragHelper = (ev, dragType) => {
     let clientX = 0;
-    if (this.supportTouch) {
-      if (ev.changedTouches.length === 0) return [clientX, true];
-      const touch = ev.changedTouches[0];
-      clientX = touch.pageX;
+
+    if (this.supportTouch || (ev && ev.changedTouches !== undefined)) {
+        
+        if (ev?.changedTouches && ev.changedTouches.length > 0) {
+            const touch = ev.changedTouches[0];
+            clientX = touch.pageX;
+        } else {
+            return [clientX, true];
+        }
     } else if (dragType === 'init') {
-      if (ev.buttons !== undefined && ev.buttons !== 1) return [clientX, true];
-      clientX = ev.clientX;
+        if (ev.buttons !== undefined && ev.buttons !== 1) return [clientX, true];
+        clientX = ev.clientX;
     } else {
-      clientX = ev.clientX;
+        clientX = ev.clientX;
     }
+
     return [clientX, false];
-  };
+};
+
 
   stopDrag = ev => {
     ev.stopPropagation();
